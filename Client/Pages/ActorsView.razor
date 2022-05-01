@@ -1,0 +1,338 @@
+﻿@page "/"
+@using ActorsClient.Shared
+@inject HttpClient Http
+
+<h2>ActorsView</h2>
+
+<div class="actors-view">
+    @if (WeatherActorStatus)
+    {
+        <div class="weather-actor actor">
+            <div class="actor-header actor-active">
+                <p class="actor-name">Weather</p>
+            </div>
+
+            <div class="actor-body actor-active-soft">
+                <div class="actor-info">
+                    @if (IsSunny)
+                    {
+                        <p>Wetter ist: "sonnig"</p>
+                    }
+                    else
+                    {
+                        <p>Wetter ist: "bewölkt"</p>
+                    }
+                </div>
+                <div class="actor-control">
+                    <input type="button" value="Wetter ändern" @onclick="() => { SetWeather(); }" />
+                </div>
+            </div>
+
+            <div class="actor-footer actor-active d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-check" @onclick="() => { WeatherActorStatus = false; }"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="weather-actor actor">
+            <div class="actor-header actor-inactive">
+                <p class="actor-name">Weather</p>
+            </div>
+
+            <div class="actor-body actor-inactive-soft">
+                <div class="actor-info">
+                </div>
+                <div class="actor-control">
+                </div>
+            </div>
+
+            <div class="actor-footer actor-inactive d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-x" @onclick="() => { WeatherActorStatus = true; }"></span>
+            </div>
+        </div>
+    }
+
+    @if (TemperatureActorStatus)
+    {
+        <div class="temperature-actor actor">
+            <div class="actor-header actor-active">
+                <p class="actor-name">Temperature</p>
+            </div>
+
+            <div class="actor-body actor-active-soft">
+                <div class="actor-info">
+                    <p>Temperatur: @TemperaturValue °</p>
+                </div>
+                <div class="actor-control">
+                    <div class="input-button-combo">
+                        <input class="number-input" type="number" placeholder="Neuen Wert eingeben" @bind-value="TemperaturChangeInput" />
+                        <input class="action-button" type="button" value="Ändern" @onclick="() => { SetTemperature();}" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="actor-footer actor-active d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-check"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="temperature-actor actor">
+            <div class="actor-header actor-inactive">
+                <p class="actor-name">Temperature</p>
+            </div>
+
+            <div class="actor-body actor-inactive-soft">
+                <div class="actor-info">
+                </div>
+                <div class="actor-control">
+                </div>
+            </div>
+
+            <div class="actor-footer actor-inactive d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-x"></span>
+            </div>
+        </div>
+    }
+
+    @if (AirConditionActorStatus)
+    {
+        <div class="air-condition-actor actor">
+            <div class="actor-header actor-active">
+                <p class="actor-name">Air Condition</p>
+            </div>
+
+            <div class="actor-body actor-active-soft">
+                <div class="actor-info">
+                    @if (AirConditionPowered && IsActive)
+                    {
+                        <p>Klimaanlage ist: Eingeschalten</p>
+                        <p>Klimaanlage ist: Aktiv</p>
+                    }
+                    else if (AirConditionPowered && !IsActive)
+                    {
+                        <p>Klimaanlage ist: Eingeschalten</p>
+                        <p>Klimaanlage ist: Inaktiv</p>
+                    }
+                    else
+                    {
+                        <p>Klimaanlage ist: Ausgeschalten</p>
+                        <p>Klimaanlage ist: Inaktiv</p>
+                    }
+                </div>
+                <div class="actor-control">
+                    @if (AirConditionPowered)
+                    {
+                        <input type="button" value="Ausschalten" @onclick="() => { TurnOffAirCondition(); }" />
+                    }
+                    else
+                    {
+                        <input type="button" value="Einschalten" @onclick="() => { TurnOnAirCondition(); }" />
+                    }
+                </div>
+            </div>
+
+            <div class="actor-footer actor-active d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-check"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="air-condition-actor actor">
+            <div class="actor-header actor-inactive">
+                <p class="actor-name">Air Condition</p>
+            </div>
+
+            <div class="actor-body actor-inactive-soft">
+                <div class="actor-info">
+                </div>
+                <div class="actor-control">
+                </div>
+            </div>
+
+            <div class="actor-footer actor-inactive d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-x"></span>
+            </div>
+        </div>
+    }
+
+    @if (BlindsActorStatus)
+    {
+        <div class="blinds-actor actor">
+            <div class="actor-header actor-active">
+                <p class="actor-name">Blinds</p>
+            </div>
+
+            <div class="actor-body actor-active-soft">
+                <div class="actor-info">
+                    @if (BlindsOpened)
+                    {
+                        <p>Fenster Rolläden sind: Offen</p>
+                    }
+                    else
+                    {
+                        <p>Fenster Rolläden sind: Geschlossen</p>
+                    }
+
+                </div>
+                <div class="actor-control">
+                </div>
+            </div>
+
+            <div class="actor-footer actor-active d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-check"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="blinds-actor actor">
+            <div class="actor-header actor-inactive">
+                <p class="actor-name">Blinds</p>
+            </div>
+
+            <div class="actor-body actor-inactive-soft">
+                <div class="actor-info">
+                </div>
+                <div class="actor-control">
+                </div>
+            </div>
+
+            <div class="actor-footer actor-inactive d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-x"></span>
+            </div>
+        </div>
+    }
+
+
+
+    @if (MediaStationActorStatus)
+    {
+        <div class="media-station-actor actor">
+            <div class="actor-header actor-active">
+                <p class="actor-name">Media Station</p>
+            </div>
+
+            <div class="actor-body actor-active-soft">
+                <div class="actor-info">
+                    @if (MediaStationPowered && MoviePlaying)
+                    {
+                        <p>Media-Station-Status: Eingeschalten</p>
+                        <p>Movie currently playing</p>
+                    }
+                    else if (MediaStationPowered && !MoviePlaying)
+                    {
+                        <p>Media-Station-Status: Eingeschalten</p>
+                        <p>Kein Medium aktiv</p>
+                    }
+                    else
+                    {
+                        <p>Media-Station-Status: Ausgeschalten</p>
+                        <p>Kein Medium aktiv</p>
+                    }
+                </div>
+                <div class="actor-control">
+                    @if (MediaStationPowered)
+                    {
+                        <input type="button" value="Ausschalten" @onclick="() => { TurnOffMediaStation(); }" />
+                    }
+                    else
+                    {
+                        <input type="button" value="Einschalten" @onclick="() => { TurnOnMediaStation(); }" />
+                    }
+                    <input type="button" value="Film starten" @onclick="() => { StartMovie(); }" />
+                </div>
+            </div>
+
+            <div class="actor-footer actor-active d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-check"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="media-station-actor actor">
+            <div class="actor-header actor-inactive">
+                <p class="actor-name">Media Station</p>
+            </div>
+
+            <div class="actor-body actor-inactive-soft">
+                <div class="actor-info">
+                </div>
+                <div class="actor-control">
+                </div>
+            </div>
+
+            <div class="actor-footer actor-inactive d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-x"></span>
+            </div>
+        </div>
+    }
+
+    @if (FridgeActorStatus)
+    {
+        <div class="fridge-actor actor">
+            <div class="actor-header actor-active">
+                <p class="actor-name">Fridge</p>
+            </div>
+
+            <div class="actor-body actor-active-soft">
+                <div class="actor-info">
+                    <p>Kühlschrank bereit</p>
+                </div>
+                <div class="actor-control">
+
+                    <div class="input-button-combo">
+                        <input class="text-input" type="text" placeholder="Produktname eingeben" @bind-value="ProductNameToConsume" />
+                        <input class="action-button" type="button" value="Konsumieren" @onclick="() => { FridgeConsum(); }" />
+                    </div>
+                    <div class="input-button-combo">
+                        <input class="text-input" type="text" placeholder="Produktname eingeben" @bind-value="ProductNameToOrder" />
+                        <input class="action-button" type="button" value="Bestellen" @onclick="() => { FridgeOrder(); }" />
+                    </div>
+
+                    <input type="button" value="Inhalt anzeigen" @onclick="() => { ShowFridgeContent(); }" />
+                    <input type="button" value="Verlauf anzeigen" @onclick="() => { ShowFridgeHistory(); }" />
+                </div>
+            </div>
+
+            <div class="actor-footer actor-active d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-check"></span>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="fridge-actor actor">
+            <div class="actor-header actor-inactive">
+                <p class="actor-name">Fridge</p>
+            </div>
+
+            <div class="actor-body actor-inactive-soft">
+                <div class="actor-info">
+                </div>
+                <div class="actor-control">
+                </div>
+            </div>
+
+            <div class="actor-footer actor-inactive d-flex">
+                <p>Actor-Status:</p> <span class="oi oi-x"></span>
+            </div>
+        </div>
+    }
+
+    <div class="messages">
+        <div class="messages-console">
+            @foreach (string msg in Messages)
+            {
+                <p>@msg</p>
+            }
+        </div>
+        <input class="msg-clear" type="button" value="Clear" @onclick="() => { Messages.Clear(); }" />
+    </div>
+
+</div>
+

@@ -1,0 +1,144 @@
+﻿
+.actors-view {
+    display: flex;
+    flex-wrap: wrap;
+
+    .actor {
+        height: 200px;
+        width: 400px;
+        border-radius: 15px;
+        border: solid 2px black;
+        margin: 1em;
+        display: block;
+
+        .actor-header {
+            height: 20%;
+            border-radius: 15px 15px 0 0;
+            padding: 10px;
+
+            .actor-name {
+                font-size: large;
+                font-weight: bold;
+            }
+        }
+
+        .actor-body {
+            height: 60%;
+            display: flex;
+
+            .actor-info {
+                width: 50%;
+                padding: 10px;
+            }
+
+            .actor-control {
+                width: 50%;
+                padding: 10px;
+            }
+        }
+
+        .actor-footer {
+            height: 20%;
+            border-radius: 0 0 15px 15px;
+            padding: 10px;
+            font-size: large;
+            font-weight: bold;
+
+            p {
+                margin-right: 1em;
+            }
+        }
+    }
+
+    .actor-active {
+        background-color: #009816bc;
+    }
+
+    .actor-active-soft {
+        background-color: #00981688;
+    }
+
+    .actor-inactive {
+        background-color: #980000bc;
+    }
+
+    .actor-inactive-soft {
+        background-color: #98000088;
+    }
+
+    .input-button-combo {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 0.5em;
+
+        .text-input {
+            width: 200px;
+            margin-right: 0.2em;
+        }
+
+        .action-button {
+            width: 120px;
+        }
+    }
+
+    .messages {
+        margin: 1em;
+
+        .messages-console {
+            height: 400px;
+            width: 800px;
+            border-radius: 15px;
+            border: solid 2px black;
+            margin: 1em;
+            padding: 10px;
+            display: block;
+            background-color: black;
+            color: white;
+
+            p {
+                margin-block: 0.2em;
+            }
+        }
+
+        .msg-clear {
+            margin: 1em;
+        }
+    }
+
+
+    .weather-actor {
+    }
+
+    .temperature-actor {
+
+        .input-button-combo {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 0.5em;
+
+            .number-input {
+                width: 50px;
+                margin-right: 0.2em;
+            }
+
+            .action-button {
+                width: 120px;
+            }
+        }
+    }
+
+    .air-condition-actor {
+    }
+
+    .blinds-actor {
+    }
+
+    .media-station-actor {
+    }
+
+    .fridge-actor {
+        height: 200px !important;
+        width: 800px !important;
+        margin: 1em;
+    }
+}
